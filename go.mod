@@ -1,4 +1,4 @@
-module go-database-utils
+module github.com/ubaidillahfaris/go-database-utils
 
 go 1.24.1
 
