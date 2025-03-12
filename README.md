@@ -115,7 +115,26 @@ func main() {
 
 ```
 
+### Pagination
+Pagination ini memungkinkan Anda untuk mengambil data dalam jumlah tertentu per halaman dengan mudah menggunakan GORM QueryBuilder.<br>
 
+This pagination allows you to easily fetch a specific number of records per page using GORM QueryBuilder.<br>
+
+此分页功能允许您使用 GORM QueryBuilder 轻松地按页获取特定数量的数据。
+
+
+```
+db, _ := database.DB("table_name")
+```
+```
+var results []map[string]interface{}
+
+db.Paginate(database.PaginationRequest{
+    Length: 10,
+    Page:   1,
+    Dest:   &results,
+})
+```
 ## Features
 Mudah digunakan dengan metode chaining seperti ORM Laravel  
 Dukungan berbagai database seperti MySQL, PostgreSQL, SQLite  

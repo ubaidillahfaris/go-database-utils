@@ -7,12 +7,13 @@ import (
 	"gorm.io/gorm"
 )
 
+// Struktur utama QueryBuilder
 type QueryBuilder struct {
 	db *gorm.DB
 }
 
+// Fungsi untuk inisialisasi database
 func DB(name string, scheme ...string) (*QueryBuilder, error) {
-
 	if len(scheme) > 1 {
 		return nil, fmt.Errorf("Error: Too many parameters, just 2 parameters allowed")
 	}
@@ -29,29 +30,29 @@ func DB(name string, scheme ...string) (*QueryBuilder, error) {
 	return &QueryBuilder{db: db.Table(name)}, nil
 }
 
-// All mengambil semua data
+// Method untuk mengambil semua data
 func (qb *QueryBuilder) All(dest interface{}) error {
 	return qb.db.Find(dest).Error
 }
 
-// First mengambil satu data pertama
+// Method untuk mengambil satu data pertama
 func (qb *QueryBuilder) First(dest interface{}) error {
 	return qb.db.First(dest).Error
 }
 
-// Where untuk filter query
+// Method untuk menambahkan filter WHERE
 func (qb *QueryBuilder) Where(query string, args ...interface{}) *QueryBuilder {
 	qb.db = qb.db.Where(query, args...)
 	return qb
 }
 
-// OrWhere menambahkan kondisi OR ke query
+// Method untuk menambahkan filter OR WHERE
 func (qb *QueryBuilder) OrWhere(query string, args ...interface{}) *QueryBuilder {
 	qb.db = qb.db.Or(query, args...)
 	return qb
 }
 
-// Limit membatasi jumlah hasil
+// Method untuk menambahkan limit
 func (qb *QueryBuilder) Limit(limit int) *QueryBuilder {
 	qb.db = qb.db.Limit(limit)
 	return qb

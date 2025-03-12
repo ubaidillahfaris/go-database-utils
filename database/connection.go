@@ -88,7 +88,6 @@ func ConnectDB(dbType string, dbHost string, dbPort string, dbName string, dbUse
 		for i := 1; i <= maxRetries; i++ {
 			db, err = gorm.Open(dialector, &gorm.Config{})
 			if err == nil {
-				fmt.Println("✅ Database Connected Successfully!")
 				return
 			}
 
