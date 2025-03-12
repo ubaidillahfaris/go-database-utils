@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"log"
 
 	"gorm.io/gorm"
@@ -10,16 +11,22 @@ type QueryBuilder struct {
 	db *gorm.DB
 }
 
-func DB(name string, scheme string) *QueryBuilder {
+func DB(name string, scheme ...string) (*QueryBuilder, error) {
 
-	if len(scheme) == 0 {
-		scheme = "pgsql"
+	if len(scheme) > 1 {
+		return nil, fmt.Errorf("Error: Too many parameters, just 2 parameters allowed")
 	}
-	db, err := Init(scheme)
+
+	dbScheme := "pgsql" // Default scheme
+	if len(scheme) > 0 {
+		dbScheme = scheme[0] // Ambil nilai pertama jika diberikan
+	}
+	db, err := Init(dbScheme)
+
 	if err != nil {
 		log.Fatal(err)
 	}
-	return &QueryBuilder{db: db.Table(name)}
+	return &QueryBuilder{db: db.Table(name)}, nil
 }
 
 // All mengambil semua data
