@@ -3,11 +3,9 @@ package database
 import (
 	"fmt"
 	"log"
-	"os"
 	"sync"
 	"time"
 
-	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
@@ -20,27 +18,38 @@ var (
 	once sync.Once
 )
 
-func Init() (*gorm.DB, error) {
-	err := godotenv.Load()
+var dbConnections = make(map[string]*gorm.DB)
 
+func Init(scheme string) (*gorm.DB, error) {
+	configList := []dbConfig{}
+
+	err := DatabaseConfig(&configList)
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal("Error loading database configuration:", err)
 	}
 
-	// Ambil konfigurasi database dari environment
-	dbType := os.Getenv("DB_CONNECTION")
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbName := os.Getenv("DB_DATABASE")
-	dbUser := os.Getenv("DB_USERNAME")
-	dbPass := os.Getenv("DB_PASSWORD")
+	// Looping untuk mencari database yang sesuai dengan scheme
+	for _, config := range configList {
 
-	db, err = ConnectDB(dbType, dbHost, dbPort, dbName, dbUser, dbPass, 3)
-	if err != nil {
-		log.Fatal(err)
+		if config.connection == scheme {
+			// Cek apakah koneksi sudah ada
+			if db, exists := dbConnections[scheme]; exists {
+				return db, nil
+			}
+
+			// Membuat koneksi baru
+			db, err := ConnectDB(config.connection, config.host, config.port, config.name, config.user, config.password, 3)
+			if err != nil {
+				return nil, err
+			}
+
+			// Simpan koneksi ke map
+			dbConnections[scheme] = db
+			return db, nil
+		}
 	}
-	return db, err
 
+	return nil, fmt.Errorf("no matching database found for scheme: %s", scheme)
 }
 
 // ConnectDB menghubungkan ke database berdasarkan tipe yang dipilih

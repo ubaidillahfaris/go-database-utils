@@ -10,8 +10,12 @@ type QueryBuilder struct {
 	db *gorm.DB
 }
 
-func DB(name string) *QueryBuilder {
-	db, err := Init()
+func DB(name string, scheme string) *QueryBuilder {
+
+	if len(scheme) == 0 {
+		scheme = "pgsql"
+	}
+	db, err := Init(scheme)
 	if err != nil {
 		log.Fatal(err)
 	}
