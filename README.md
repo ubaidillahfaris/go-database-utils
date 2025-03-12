@@ -77,6 +77,45 @@ func main() {
 }  
 ```
 
+Kode ini memungkinkan penggunaan beberapa koneksi database sekaligus, seperti MySQL dan PostgreSQL.
+Kita dapat menentukan koneksi yang diinginkan dengan parameter kedua pada fungsi 
+```
+database.DB(nama_tabel, skema)
+```
+<br>
+
+This code allows multiple database connections simultaneously, such as MySQL and PostgreSQL.
+We can specify the desired connection using the second parameter in the 
+```
+database.DB(table_name, scheme)
+```
+<br>
+
+此代码允许同时使用多个数据库连接，例如 MySQL 和 PostgreSQL。
+我们可以通过 
+```
+database.DB(table_name, scheme) 
+```
+函数的第二个参数指定所需的连接。
+
+Menggunakan MySQL untuk mengakses tabel users. <br>
+Using MySQL to access the users table. <br>
+使用 MySQL 访问 users 表。<br>
+
+```
+func main() {
+	users := database.DB("users", "mysql")
+	print(users)
+}
+
+func main() {
+	users := database.DB("users", "pgsql")
+	print(users)
+}
+
+```
+
+
 ## Features
 Mudah digunakan dengan metode chaining seperti ORM Laravel  
 Dukungan berbagai database seperti MySQL, PostgreSQL, SQLite  
