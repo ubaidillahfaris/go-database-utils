@@ -1,0 +1,47 @@
+package database
+
+import (
+	"github.com/joho/godotenv"
+)
+
+// dbConfig adalah struktur untuk konfigurasi database
+type dbConfig struct {
+	connection string
+	host       string
+	port       string
+	name       string
+	user       string
+	password   string
+}
+
+// DatabaseConfig mengisi konfigurasi database dari environment variables
+func DatabaseConfig(configList *[]dbConfig) error {
+	// Load environment variables
+	if err := godotenv.Load(); err != nil {
+		return err
+	}
+
+	// PostgreSQL
+	pgsql := dbConfig{
+		connection: "{{ .PG_CONNECTION }}",
+		host:       "{{ .PG_HOST }}",
+		port:       "{{ .PG_PORT }}",
+		name:       "{{ .PG_NAME }}",
+		user:       "{{ .PG_USER }}",
+		password:   "{{ .PG_PASSWORD }}",
+	}
+
+	// Konfigurasi MySQL
+	//mysql := dbConfig{
+	//	connection: "{{ .MYSQL_CONNECTION }}",
+	//	host:       "{{ .MYSQL_HOST }}",
+	//	port:       "{{ .MYSQL_PORT }}",
+	//	name:       "{{ .MYSQL_NAME }}",
+	//	user:       "{{ .MYSQL_USER }}",
+	//	password:   "{{ .MYSQL_PASSWORD }}",
+	//}
+
+	*configList = []dbConfig{pgsql, /**mysql**/}
+
+	return nil
+}
