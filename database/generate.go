@@ -14,7 +14,7 @@ import (
 func GenerateConfig() error {
 	// Tentukan lokasi template dan output
 	templatePath := filepath.Join("database", "tmpl", "config.tmpl")
-	outputPath := filepath.Join("config", "database.go")
+	outputPath := filepath.Join(getRootPath(), "config", "database.go")
 
 	// Baca file template
 	tmplContent, err := os.ReadFile(templatePath)
@@ -74,4 +74,15 @@ func getEnv(key, fallback string) string {
 		return value
 	}
 	return fallback
+}
+
+// getRootPath mendapatkan path root aplikasi client
+func getRootPath() string {
+	// Dapatkan direktori kerja aplikasi client
+	dir, err := os.Getwd()
+	if err != nil {
+		fmt.Println("❌ Error mendapatkan root path aplikasi:", err)
+		os.Exit(1)
+	}
+	return dir
 }
